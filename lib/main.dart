@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:throneapp/Screens/loginScreen.dart';
 import 'package:throneapp/models/User.dart';
 import 'package:throneapp/service/api.dart';
 
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LoginPage(),
     );
   }
 }
