@@ -1,6 +1,7 @@
 import 'dart:convert'; // For JSON encoding/decoding
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:throneapp/Screens/dashboard.dart';
 import 'package:throneapp/models/Albums.dart';
 import 'package:throneapp/models/Mixtape.dart';
 import 'package:throneapp/models/Purchase.dart';
@@ -30,6 +31,8 @@ class Api extends ChangeNotifier{
         },
         body: jsonEncode(user.toMap()), // Convert user object to JSON
       );
+
+      print("Registration");
       
       notifyListeners();
       
@@ -40,7 +43,7 @@ class Api extends ChangeNotifier{
     }
   }
 
-  Future<void> loginWithEmail(String email, String password)async{
+  Future<void> loginWithEmail(String email, String password, BuildContext context)async{
     final Uri url = Uri.parse('${_baseEndpoint}auth/login');
     try{
       final response = await http.post(
@@ -56,6 +59,8 @@ class Api extends ChangeNotifier{
         );
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         token = responseData['data']['token'];
+        Navigator.push(context, MaterialPageRoute(builder: (builder)=>Dashboard()));
+        print("Login succes");
       notifyListeners();
     }catch(e){
       // Log any exceptions that occur

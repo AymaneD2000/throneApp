@@ -1,27 +1,16 @@
+import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
-import 'package:throneapp/Screens/SignUp.dart';
-import 'dart:convert';
+import 'package:throneapp/models/User.dart';
 
 import '../service/api.dart';
 
-// import 'signupPage.dart';
-
-class LoginPage extends StatelessWidget {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    
-    scopes: <String>[
-    'https://dev.suguonline.com/api/v1/auth/google/redirect',
-    'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
-  ],
-  );
-
-  Api api = Api();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+class SignUpPage extends StatelessWidget {
+  final Api api = Api();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +50,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'VIVEZ LA MUSIQUE AUTREMENTS',
+                      'CRÉEZ VOTRE COMPTE',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.roboto(
                         fontSize: 18,
@@ -69,7 +58,22 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    // Email and Password fields (unchanged)
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.teal.withOpacity(0.1),
+                        hintText: 'Nom',
+                        hintStyle: const TextStyle(color: Color(0xFF37474F)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: const Icon(Icons.person, color: Color(0xFF37474F)),
+                      ),
+                      style: const TextStyle(color: Color(0xFF37474F)),
+                    ),
+                    const SizedBox(height: 20),
                     TextField(
                       controller: emailController,
                       decoration: InputDecoration(
@@ -102,10 +106,35 @@ class LoginPage extends StatelessWidget {
                       ),
                       style: const TextStyle(color: Color(0xFF37474F)),
                     ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: confirmPasswordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.teal.withOpacity(0.1),
+                        hintText: 'Confirmez le mot de passe',
+                        hintStyle: const TextStyle(color: Color(0xFF37474F)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF37474F)),
+                      ),
+                      style: const TextStyle(color: Color(0xFF37474F)),
+                    ),
                     const SizedBox(height: 30),
                     ElevatedButton(
-                      onPressed: () async{
-                        await api.loginWithEmail(emailController.text, passwordController.text, context);
+                      onPressed: () async {
+                        if (passwordController.text == confirmPasswordController.text) {
+                          await api.userRegistration(
+                            User(email: emailController.text, nom: nameController.text, password: passwordController.text, confirmation: confirmPasswordController.text)
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Les mots de passe ne correspondent pas.')),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -116,7 +145,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       child: const Center(
                         child: Text(
-                          'Connexion',
+                          'S\'inscrire',
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -125,52 +154,39 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    const Row(
-                      children: [
-                        Expanded(child: Divider(color: Color(0xFFB0BEC5))),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            'Ou connectez-vous avec',
+                    EasyRichText(
+                      "Vous avez déjà un compte? Connectez-vous",
+                        patternList: const [
+                          EasyRichTextPattern(
+                            targetString: 'Vous avez déjà un compte?',
                             style: TextStyle(color: Color(0xFF616161)),
-                          ),
-                        ),
-                        Expanded(child: Divider(color: Color(0xFFB0BEC5))),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    IconButton(
-                      icon: Image.asset(
-                        'assets/images/google.png',
-                        width: 50,
+                            ),
+                          EasyRichTextPattern(
+                            targetString: 'Connectez-vous',
+                            style: TextStyle(color: Colors.teal, overflow: TextOverflow.ellipsis),
+                          )
+                        ],
                       ),
-                      iconSize: 50,
-                      onPressed: () async {
-                        await _handleGoogleSignIn(context);
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Pas de compte?",
-                          style: TextStyle(color: Color(0xFF616161)),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (builder) => SignUpPage()));
-                          },
-                          child: const Text(
-                            "S'inscrire",
-                            style: TextStyle(color: Colors.teal),
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     const Text(
+                    //       'Vous avez déjà un compte?',
+                    //       style: TextStyle(color: Color(0xFF616161)),
+                    //     ),
+                    //     TextButton(
+                    //       onPressed: () {
+                    //         Navigator.pop(context);
+                    //       },
+                    //       child: const Text(
+                    //         softWrap: true,
+                    //         overflow: TextOverflow.ellipsis,
+                    //         'Connectez-vous',
+                    //         style: TextStyle(color: Colors.teal, overflow: TextOverflow.ellipsis),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
@@ -179,42 +195,5 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _handleGoogleSignIn(BuildContext context) async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-      if (googleUser == null) {
-        // User canceled the sign-in process
-        return;
-      }
-
-      final String idToken = (await googleUser.authentication).idToken!;
-
-      // Send the token to your backend
-      final Uri url =
-          Uri.parse('https://dev.suguonline.com/api/v1/auth/google/redirect');
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: jsonEncode({'idToken': idToken}),
-      );
-
-      if (response.statusCode == 200) {
-        // Handle successful response
-        final data = jsonDecode(response.body);
-        // You can store the token or navigate to another screen
-        print('Login Successful: ${data['message']}');
-      } else {
-        // Handle errors
-        print('Error: ${response.statusCode} - ${response.body}');
-      }
-    } catch (error) {
-      print('Error signing in with Google: $error');
-    }
   }
 }
