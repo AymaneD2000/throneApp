@@ -13,6 +13,7 @@ class Api extends ChangeNotifier{
   List<Mixtape> mixtapes = [];
   List<Purchase> myPurchase = [];
   List<Song> mySongs = [];
+  List<Song> songs = [];
   User? user;
   static const String _baseEndpoint = "https://dev.suguonline.com/api/v1/";
   static String token = "";
@@ -59,13 +60,15 @@ class Api extends ChangeNotifier{
         );
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         token = responseData['data']['token'];
-        Navigator.push(context, MaterialPageRoute(builder: (builder)=>Dashboard()));
+        await fetchMusicsData();
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder)=>Dashboard()));
         print("Login succes");
       notifyListeners();
     }catch(e){
       // Log any exceptions that occur
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
       print('Error during registration: $e');
-      rethrow; // Re-throw the exception for further handling
+      //rethrow;  Re-throw the exception for further handling
     }
   }
 
@@ -130,6 +133,11 @@ class Api extends ChangeNotifier{
         albums = (jsonData['data']['albums'] as List)
             .map((album) => Album.fromSnapshot(album))
             .toList();
+
+        for(final i in albums){
+          songs.insertAll(0, i.songs);
+        }
+        print(songs);
         // Parse Mixtapes
         mixtapes = (jsonData['data']['mixtapes'] as List)
             .map((mixtape) => Mixtape.fromSnapshot(mixtape))

@@ -10,7 +10,7 @@ class AppDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(
+            decoration:const BoxDecoration(
               color: Colors.teal,
             ),
             child: Center(
@@ -31,11 +31,18 @@ class AppDrawer extends StatelessWidget {
                       ),
             ),
           ),
-          DrawerItem(icon: Icons.music_note, text: 'My Music Offline'),
-          DrawerItem(icon: Icons.shopping_cart, text: 'My Music to Buy'),
-          DrawerItem(icon: Icons.video_library, text: 'Clip Videos'),
-          DrawerItem(icon: Icons.info, text: 'About App'),
-          DrawerItem(icon: Icons.rate_review, text: 'Rate App'),
+          const Column(
+            children: [
+              DrawerItem(icon: Icons.dashboard, text: 'Dashboard'),
+              DrawerItem(icon: Icons.music_note, text: 'My Music Offline'),
+              DrawerItem(icon: Icons.shopping_cart, text: 'My Music to Buy'),
+              DrawerItem(icon: Icons.video_library, text: 'Clip Videos'),
+              DrawerItem(icon: Icons.info, text: 'About App'), 
+              DrawerItem(icon: Icons.rate_review, text: 'Rate App'),
+            ],
+          ),
+          //Spacer(),
+          const DrawerItem(icon: Icons.logout, text: 'Logout'),
         ],
       ),
     );

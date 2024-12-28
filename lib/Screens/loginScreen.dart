@@ -105,7 +105,11 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () async{
-                        await api.loginWithEmail(emailController.text, passwordController.text, context);
+                        if(emailController.text != "" || passwordController.text != ""){
+                          await api.loginWithEmail(emailController.text, passwordController.text, context);
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Veuillez renseignez les champs email et password s'il vous plait")));
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 15),
