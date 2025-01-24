@@ -11,17 +11,18 @@ import '../service/api.dart';
 
 class LoginPage extends StatelessWidget {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    
     scopes: <String>[
-    'https://dev.suguonline.com/api/v1/auth/google/redirect',
-    'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
-  ],
+      'https://dev.suguonline.com/api/v1/auth/google/redirect',
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
   );
 
   Api api = Api();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,8 @@ class LoginPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: const Icon(Icons.email, color: Color(0xFF37474F)),
+                        prefixIcon:
+                            const Icon(Icons.email, color: Color(0xFF37474F)),
                       ),
                       style: const TextStyle(color: Color(0xFF37474F)),
                     ),
@@ -98,17 +100,22 @@ class LoginPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: const Icon(Icons.lock, color: Color(0xFF37474F)),
+                        prefixIcon:
+                            const Icon(Icons.lock, color: Color(0xFF37474F)),
                       ),
                       style: const TextStyle(color: Color(0xFF37474F)),
                     ),
                     const SizedBox(height: 30),
                     ElevatedButton(
-                      onPressed: () async{
-                        if(emailController.text != "" || passwordController.text != ""){
-                          await api.loginWithEmail(emailController.text, passwordController.text, context);
-                        }else{
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Veuillez renseignez les champs email et password s'il vous plait")));
+                      onPressed: () async {
+                        if (emailController.text != "" ||
+                            passwordController.text != "") {
+                          await api.loginWithEmail(emailController.text,
+                              passwordController.text, context);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text(
+                                  "Veuillez renseignez les champs email et password s'il vous plait")));
                         }
                       },
                       style: ElevatedButton.styleFrom(

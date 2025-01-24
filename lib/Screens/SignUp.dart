@@ -1,4 +1,5 @@
 import 'package:easy_rich_text/easy_rich_text.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:throneapp/models/User.dart';
@@ -10,7 +11,10 @@ class SignUpPage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +73,8 @@ class SignUpPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: const Icon(Icons.person, color: Color(0xFF37474F)),
+                        prefixIcon:
+                            const Icon(Icons.person, color: Color(0xFF37474F)),
                       ),
                       style: const TextStyle(color: Color(0xFF37474F)),
                     ),
@@ -85,7 +90,8 @@ class SignUpPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: const Icon(Icons.email, color: Color(0xFF37474F)),
+                        prefixIcon:
+                            const Icon(Icons.email, color: Color(0xFF37474F)),
                       ),
                       style: const TextStyle(color: Color(0xFF37474F)),
                     ),
@@ -102,7 +108,8 @@ class SignUpPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: const Icon(Icons.lock, color: Color(0xFF37474F)),
+                        prefixIcon:
+                            const Icon(Icons.lock, color: Color(0xFF37474F)),
                       ),
                       style: const TextStyle(color: Color(0xFF37474F)),
                     ),
@@ -119,20 +126,28 @@ class SignUpPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF37474F)),
+                        prefixIcon: const Icon(Icons.lock_outline,
+                            color: Color(0xFF37474F)),
                       ),
                       style: const TextStyle(color: Color(0xFF37474F)),
                     ),
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () async {
-                        if (passwordController.text == confirmPasswordController.text) {
+                        if (passwordController.text ==
+                            confirmPasswordController.text) {
                           await api.userRegistration(
-                            User(email: emailController.text, nom: nameController.text, password: passwordController.text, confirmation: confirmPasswordController.text)
-                          );
+                              User(
+                                  email: emailController.text,
+                                  nom: nameController.text,
+                                  password: passwordController.text,
+                                  confirmation: confirmPasswordController.text),
+                              context);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Les mots de passe ne correspondent pas.')),
+                            const SnackBar(
+                                content: Text(
+                                    'Les mots de passe ne correspondent pas.')),
                           );
                         }
                       },
@@ -156,17 +171,23 @@ class SignUpPage extends StatelessWidget {
                     const SizedBox(height: 20),
                     EasyRichText(
                       "Vous avez déjà un compte? Connectez-vous",
-                        patternList: const [
-                          EasyRichTextPattern(
-                            targetString: 'Vous avez déjà un compte?',
-                            style: TextStyle(color: Color(0xFF616161)),
-                            ),
-                          EasyRichTextPattern(
-                            targetString: 'Connectez-vous',
-                            style: TextStyle(color: Colors.teal, overflow: TextOverflow.ellipsis),
-                          )
-                        ],
-                      ),
+                      patternList: [
+                        EasyRichTextPattern(
+                          targetString: 'Vous avez déjà un compte?',
+                          style: TextStyle(color: Color(0xFF616161)),
+                        ),
+                        EasyRichTextPattern(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.pop(context);
+                            },
+                          targetString: 'Connectez-vous',
+                          style: TextStyle(
+                              color: Colors.teal,
+                              overflow: TextOverflow.ellipsis),
+                        )
+                      ],
+                    ),
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.center,
                     //   children: [

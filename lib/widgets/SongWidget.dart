@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:throneapp/Const.dart';
 import 'package:throneapp/models/Song.dart';
 
 class SongWidget extends StatelessWidget {
   final Song song;
 
-  const SongWidget({Key? key, required this.song}) : super(key: key);
+  const SongWidget({super.key, required this.song});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class SongWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Image.network(
-                song.cover,
+                mainLink + song.cover,
                 height: 100,
                 width: 100,
                 fit: BoxFit.cover,
@@ -49,7 +50,7 @@ class SongWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    song.price.toString() + ' FCFA',
+                    '${song.price} FCFA',
                     style: GoogleFonts.roboto(
                       fontSize: 16,
                       color: const Color(0xFF616161),
@@ -63,7 +64,8 @@ class SongWidget extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       color: song.price == 0
                           ? Colors.teal
-                          : const Color(0xFFBF360C), // Teal for free, red for paid
+                          : const Color(
+                              0xFFBF360C), // Teal for free, red for paid
                     ),
                   ),
                 ],

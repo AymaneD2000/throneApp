@@ -4,7 +4,7 @@ class DrawerItem extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const DrawerItem({Key? key, required this.icon, required this.text}) : super(key: key);
+  const DrawerItem({super.key, required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {

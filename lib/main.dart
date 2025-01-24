@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:throneapp/Screens/loginScreen.dart';
-import 'package:throneapp/models/User.dart';
 import 'package:throneapp/service/api.dart';
 
 void main() {
-
   runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => Api())
-    ],
+    providers: [ChangeNotifierProvider(create: (_) => Api())],
     child: const MyApp(),
   ));
 }

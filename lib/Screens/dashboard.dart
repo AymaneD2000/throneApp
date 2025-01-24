@@ -15,30 +15,50 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   @override
+  void initState() {
+    super.initState();
+    // Fetch music data when the widget is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<Api>().fetchMusicsData();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: AppDrawer(),
-      appBar: AppBar(title: Text(
-                      'Throne',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF37474F),
-                        shadows: [
-                          const Shadow(
-                            blurRadius: 10,
-                            color: Colors.tealAccent,
-                            offset: Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                    ),), 
-                    body: ListView.builder(
-                      itemCount: context.read<Api>().songs.length,
-                      itemBuilder: (context, count){
-                      final song = context.read<Api>().songs;
-                      return SongWidget(song: song[count]);
-                    }),
+      appBar: AppBar(
+        title: Text(
+          'Throne',
+          style: GoogleFonts.montserrat(
+            fontSize: 50,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF37474F),
+            shadows: [
+              const Shadow(
+                blurRadius: 10,
+                color: Colors.tealAccent,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: Consumer<Api>(
+        builder: (context, api, child) {
+          if (api.songs.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ListView.builder(
+            itemCount: api.songs.length,
+            itemBuilder: (context, count) {
+              final song = api.songs[count];
+              print(song);
+              return SongWidget(song: song);
+            },
+          );
+        },
+      ),
     );
   }
 }
